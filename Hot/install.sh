@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 function acpi_call {
 	pacman -Q acpi_call-git > /dev/null 2>&1
@@ -12,6 +12,22 @@ function acpi_call {
 	echo "acpi_call kernel module addes ;)"
 	echo "------------------"
 	run_acpi
+}
+
+function AddStart {
+	echo 'Add this script to startup? (y/n)'
+        read answer
+ 
+        while [[ x$answer != xy && x$answer != xn ]]
+        do
+                echo you have entered an invalid response. Please type y or n: 
+                read answer
+        done
+	if [ x$answer == xy ]
+	then
+		echo $STARTUP >> ~/.bashrc
+		echo 'echo Off on ` date "+%a %b %e %H:%M:%S %Z %Y" ` >> /var/log/vgaoff.log 2>> /var/log/vgaoff.err'  >>  ~/.bashrc
+	fi 
 }
 
 function run_acpi {
@@ -30,10 +46,14 @@ do
     case $opt in
         "Dell")
             sudo /usr/share/acpi_call/dellL702X.sh $answer
+	    STARTUP="sudo /usr/share/acpi_call/dellL702X.sh $answer"
+	    #AddStart $STARTUP
 	    exit
             ;;
         "Asus")
             sudo /usr/share/acpi_call/asus1215n.sh $answer
+	    STARTUP="sudo /usr/share/acpi_call/asus1215n.sh $answer"
+	    #AddStart $STARTUP
 	    exit
             ;;
         "Other")
