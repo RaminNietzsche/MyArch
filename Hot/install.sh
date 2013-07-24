@@ -25,8 +25,7 @@ function AddStart {
         done
 	if [ x$answer == xy ]
 	then
-		echo $STARTUP >> ~/.bashrc
-		echo 'echo Off on ` date "+%a %b %e %H:%M:%S %Z %Y" ` >> /var/log/vgaoff.log 2>> /var/log/vgaoff.err'  >>  ~/.bashrc
+		echo -e "$STARTUP \nif [ \$? -eq 0 ] \nthen  \n\techo Off on \`date\` |sudo tee -a /var/log/vgaoff.log  > /dev/null 2>&1 \nelse \n\techo Error on \`date\`| sudo tee -a /var/log/vgaoff.err  > /dev/null 2>&1\nfi"  | sudo tee /etc/profile.d/hot.sh > /dev/null 2>&1
 	fi 
 }
 
@@ -47,13 +46,13 @@ do
         "Dell")
             sudo /usr/share/acpi_call/dellL702X.sh $answer
 	    STARTUP="sudo /usr/share/acpi_call/dellL702X.sh $answer"
-	    #AddStart $STARTUP
+	    AddStart $STARTUP
 	    exit
             ;;
         "Asus")
             sudo /usr/share/acpi_call/asus1215n.sh $answer
 	    STARTUP="sudo /usr/share/acpi_call/asus1215n.sh $answer"
-	    #AddStart $STARTUP
+	    AddStart $STARTUP
 	    exit
             ;;
         "Other")
